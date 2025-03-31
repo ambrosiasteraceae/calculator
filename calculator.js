@@ -2,16 +2,10 @@ container = document.querySelector(".container")
 display = document.querySelector(".display")
 
 
-let op = "";
 let string = "";
-
 var i = 0;
 var isComputed = false;
-
 const operators = ["*", "-", "+", "/"]
-//TODO -> Clear trailing 0 from display
-//TODO ->Add logic and swtch from a to op to b when user provides operator
-//TODO -> evaluate expression when any of the operators is being provided
 
 container.addEventListener("click", (e) =>
 {
@@ -20,7 +14,7 @@ container.addEventListener("click", (e) =>
     switch(e.target.id)
     {
         case "dot":
-            addFloatSeparator(e)
+            addFloatSeparator()
             break;
         case "clear":
             clearInput(e);
@@ -100,8 +94,6 @@ function Calculator()
             right = parseFloat(input[2]);
             if (isNaN(right))
                 return left
-            
-
             result = this.methods[op](left,right)
 
             if(result%1 == 0)
@@ -119,19 +111,34 @@ function Calculator()
     }
 
 
-function addFloatSeparator(e)
+function addFloatSeparator()
 {
-    let input = string;
-    if (input.includes("."))
-        return
-    display.textContent += e.target.textContent
+    console.log("inside float operator")
+    console.log(":string is:", string)
+    if(!isOperatorIncluded(string)) // only left input
+        {
+
+     
+        if (!string.includes("."))
+        {
+            display.textContent+=userInput;
+            string+=userInput;
+        }   }
+    else // second input
+    {
+
+        console.log("second case", string.split(" ")[2]);
+        if(!string.split(" ")[2].includes("."))
+        {
+            display.textContent+=userInput;
+            string+=userInput;
+        } };
 }
 
 function clearInput() {
 
     console.log(string);
     string = "";
-    op = "";
     i = -1;
     display.innerHTML = "0";
     isComputed = false;
