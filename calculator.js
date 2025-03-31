@@ -1,21 +1,21 @@
-let op = "";
-let string = "";
 container = document.querySelector(".container")
 display = document.querySelector(".display")
-const operators = ["*", "-", "+", "/"]
 
+
+let op = "";
+let string = "";
+const operators = ["*", "-", "+", "/"]
+var i = 0;
 
 
 //TODO -> Clear trailing 0 from display
 //TODO ->Add logic and swtch from a to op to b when user provides operator
 //TODO -> evaluate expression when any of the operators is being provided
 
-
 container.addEventListener("click", (e) =>
 {
     userInput = e.target.textContent;
     classValue = e.target.classList.value;
-    console.log(e.target.id);
     switch(e.target.id)
     {
         case "dot":
@@ -25,14 +25,27 @@ container.addEventListener("click", (e) =>
             clearInput(e);
             break;
         case "equal":
-            evaluateExpr(e);
+            if (isOperatorIncluded(string))
+            {
+                string = evaluateExpr(e);
+                console.log(string);
+                display.textContent = string;
+            }
+
             break;
         case "division":
         case "multiply":
         case "minus":
-        case "plus":
+        case "plus":   
+            console.log("op was pressed") ;
+            if (isOperatorIncluded(string))
+            {
+                console.log(string)
+                string = evaluateExpr(e);
+                console.log(string)
+                display.textContent = string;
+            }
             string += " " + userInput + " ";
-            // console.log("hey im not being called")
             break;
         case "zero":
         case "one":
@@ -45,25 +58,34 @@ container.addEventListener("click", (e) =>
         case "eight":
         case "nine":
             string += userInput;
-            // console.log(string.split(" "))
-            if (operators.some((item) => string.includes(item)))
+            // This technique is sloppy ..
+            if (isOperatorIncluded(string))
                 display.innerHTML = string.split(" ")[2];
             else
-            {
-                display.textContent += userInput;
-            }
+                if(i == 0)
+                    display.textContent = userInput;
+                else
+                    display.textContent += userInput;
+            
+            break;
         default:
             console.log("Do Nothing");
-
-            // 
-
-    }
+    
+    };
+    i++;
 
 });
 
+
+function isOperatorIncluded(str)
+{
+    return operators.some((item) => str.includes(item))
+}
 function evaluateExpr(e)
 {
-
+    calc = new Calculator();
+    result = calc.calculate(string)
+    return result.toString();
 }
 
 function Calculator()
@@ -71,30 +93,36 @@ function Calculator()
     this.calculate = function (str)
     {
         let input =  str.split(" ");
+
         left = parseFloat(input[0]);
         op = input[1];
         right = parseFloat(input[2]);
-        this.left = methods[op](left,right)
-        return String(this.left)
+
+        if (isNaN(right))
+        {
+            return left
+        }
+        result = this.methods[op](left,right)
+
+        if(result%1 == 0)
+            return result
+        return result.toFixed(6);
+
     };
 
-    this.methods ={
-        "+" : (a,b) => a+b,
-        "-" : (a,b) => a-b,
-        "/" : (a,b) => a/b,
-        "*" : (a,b) => a*b,
-        };
+    // this.methods ={
+    //     "+" : (a,b) => a+b,
+    //     "-" : (a,b) => a-b,
+    //     "/" : (a,b) => a/b,
+    //     "*" : (a,b) => a*b,
+    //     };
 
-    this.addMethod = function (operator, callback) {
-        thismethods[operator] = callback; }
-    this.printMethods = () => Object.entries(methods).flat()
 }
 
 
 function addFloatSeparator(e)
 {
-    let input = display.textContent
-    console.log(typeof(input));
+    let input = string;
     if (input.includes("."))
         return
     display.textContent += e.target.textContent
@@ -105,5 +133,6 @@ function clearInput() {
     console.log(string);
     string = "";
     op = "";
+    i = -1;
     display.innerHTML = "0";
 }
