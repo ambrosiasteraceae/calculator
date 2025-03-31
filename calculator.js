@@ -59,6 +59,7 @@ container.addEventListener("click", (e) =>
         case "nine":
             string += userInput;
             // This technique is sloppy ..
+            console.log(string);
             if (isOperatorIncluded(string))
                 display.innerHTML = string.split(" ")[2];
             else
@@ -79,13 +80,14 @@ container.addEventListener("click", (e) =>
 
 function isOperatorIncluded(str)
 {
+    console.log("Type of string is ", typeof(str))
     return operators.some((item) => str.includes(item))
 }
 function evaluateExpr(e)
 {
     calc = new Calculator();
     result = calc.calculate(string)
-    return result.toString();
+    return result.toString()
 }
 
 function Calculator()
@@ -93,15 +95,16 @@ function Calculator()
     this.calculate = function (str)
     {
         let input =  str.split(" ");
-
         left = parseFloat(input[0]);
         op = input[1];
         right = parseFloat(input[2]);
-
         if (isNaN(right))
         {
+            console.log("Am i retruning>")
             return left
         }
+         
+        console.log("right member is: ", right)
         result = this.methods[op](left,right)
 
         if(result%1 == 0)
@@ -110,12 +113,12 @@ function Calculator()
 
     };
 
-    // this.methods ={
-    //     "+" : (a,b) => a+b,
-    //     "-" : (a,b) => a-b,
-    //     "/" : (a,b) => a/b,
-    //     "*" : (a,b) => a*b,
-    //     };
+    this.methods ={
+        "+" : (a,b) => a+b,
+        "-" : (a,b) => a-b,
+        "/" : (a,b) => a/b,
+        "*" : (a,b) => a*b,
+        };
 
 }
 
