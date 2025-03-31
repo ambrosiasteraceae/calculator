@@ -4,10 +4,11 @@ display = document.querySelector(".display")
 
 let op = "";
 let string = "";
-const operators = ["*", "-", "+", "/"]
+
 var i = 0;
+var isComputed = false;
 
-
+const operators = ["*", "-", "+", "/"]
 //TODO -> Clear trailing 0 from display
 //TODO ->Add logic and swtch from a to op to b when user provides operator
 //TODO -> evaluate expression when any of the operators is being provided
@@ -28,7 +29,6 @@ container.addEventListener("click", (e) =>
             if (isOperatorIncluded(string))
             {
                 string = evaluateExpr(e);
-                console.log(string);
                 display.textContent = string;
             }
 
@@ -37,12 +37,10 @@ container.addEventListener("click", (e) =>
         case "multiply":
         case "minus":
         case "plus":   
-            console.log("op was pressed") ;
+            console.log(userInput);
             if (isOperatorIncluded(string))
             {
-                console.log(string)
                 string = evaluateExpr(e);
-                console.log(string)
                 display.textContent = string;
             }
             string += " " + userInput + " ";
@@ -57,8 +55,10 @@ container.addEventListener("click", (e) =>
         case "seven":
         case "eight":
         case "nine":
+            if(!isOperatorIncluded(string) && isComputed)
+                clearInput();
             string += userInput;
-            // This technique is sloppy ..
+            // This technique is sloppy but works
             console.log(string);
             if (isOperatorIncluded(string))
                 display.innerHTML = string.split(" ")[2];
@@ -80,47 +80,43 @@ container.addEventListener("click", (e) =>
 
 function isOperatorIncluded(str)
 {
-    console.log("Type of string is ", typeof(str))
     return operators.some((item) => str.includes(item))
 }
 function evaluateExpr(e)
 {
     calc = new Calculator();
     result = calc.calculate(string)
+    isComputed = true;
     return result.toString()
 }
 
 function Calculator()
-{
-    this.calculate = function (str)
     {
-        let input =  str.split(" ");
-        left = parseFloat(input[0]);
-        op = input[1];
-        right = parseFloat(input[2]);
-        if (isNaN(right))
+        this.calculate = function (str)
         {
-            console.log("Am i retruning>")
-            return left
-        }
-         
-        console.log("right member is: ", right)
-        result = this.methods[op](left,right)
+            let input =  str.split(" ");
+            left = parseFloat(input[0]);
+            op = input[1];
+            right = parseFloat(input[2]);
+            if (isNaN(right))
+                return left
+            
 
-        if(result%1 == 0)
-            return result
-        return result.toFixed(6);
+            result = this.methods[op](left,right)
 
-    };
+            if(result%1 == 0)
+                return result
+            return result.toFixed(6);
 
-    this.methods ={
-        "+" : (a,b) => a+b,
-        "-" : (a,b) => a-b,
-        "/" : (a,b) => a/b,
-        "*" : (a,b) => a*b,
         };
 
-}
+        this.methods ={
+            "+" : (a,b) => a+b,
+            "-" : (a,b) => a-b,
+            "/" : (a,b) => a/b,
+            "*" : (a,b) => a*b,
+            };
+    }
 
 
 function addFloatSeparator(e)
@@ -138,4 +134,5 @@ function clearInput() {
     op = "";
     i = -1;
     display.innerHTML = "0";
+    isComputed = false;
 }
