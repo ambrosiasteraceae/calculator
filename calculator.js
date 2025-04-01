@@ -13,9 +13,6 @@ window.addEventListener("keydown", function(e)
 
     const num = document.querySelector(`button[data-key="${e.keyCode}"]`)
     // console.log(e.keyCode);
-    // console.log(num.id);
-    // handleNumber(num.textContent);
-    // i++;
     operate(num);
 
 
@@ -28,8 +25,7 @@ function operate(element)
     switch(element.id)
     {
         case "percentage":
-            addPercentage();
-            //stringAddPercentage();
+            stringAddPercentage();
             break;
         case "plus-minus":
             plusMinus();
@@ -178,8 +174,6 @@ function Calculator()
 function processStringPercentage(str)
 {
 
-
-
     idx = str.indexOf(".");
     if (idx != -1)
     { 
@@ -244,35 +238,6 @@ function stringAddPercentage()
 
 }
 
-function addPercentage()
-{
-    //actually, this function is harder than it seems if you want to convert from strings.
-    //the solutions are different depending on where the floating point is on the string
-    if(string.split(" ").length<2)
-    {
-    num = parseFloat(string)
-    console.log("Num is:",num); //lets do a little trick
-    num /=100;
-    res = num.toString();
-    console.log("resulting string is:", res)
-    display.textContent=res;
-    string= res; 
-    }
-    else {
-        let input = string.split(" ")
-        let a = input[0];
-        let s = input[1];
-        let b = input[2];
-
-        num = parseFloat(b);
-        num /=100;
-        res = num.toString();
-
-        display.textContent=res;
-        string=a + " " + s + " " + res; 
-      
-    }
-}
 function addFloatSeparator()
 {
 
