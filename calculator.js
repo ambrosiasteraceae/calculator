@@ -7,10 +7,25 @@ var i = 0;
 var isComputed = false;
 const operators = ["*", "-", "+", "/"]
 
-container.addEventListener("click", (e) =>
+window.addEventListener("keydown", function(e)
 {
-    userInput = e.target.textContent;
-    switch(e.target.id)
+    console.log(e.key, e.keyCode)
+
+    const num = document.querySelector(`button[data-key="${e.keyCode}"]`)
+    // console.log(e.keyCode);
+    // console.log(num.id);
+    // handleNumber(num.textContent);
+    // i++;
+    operate(num);
+
+
+
+});
+
+function operate(element)
+{
+    userInput = element.textContent;
+    switch(element.id)
     {
         case "percentage":
             addPercentage();
@@ -23,16 +38,16 @@ container.addEventListener("click", (e) =>
             addFloatSeparator()
             break;
         case "clear":
-            clearInput(e);
+            clearInput();
             break;
         case "equal":
-            handleEqual(e);
+            handleEqual();
             break;
         case "division":
         case "multiply":
         case "minus":
         case "plus":   
-            handleOperator(e);
+            handleOperator();
             break;
         case "zero":
         case "one":
@@ -44,7 +59,7 @@ container.addEventListener("click", (e) =>
         case "seven":
         case "eight":
         case "nine":
-            handleNumber()
+            handleNumber(userInput)
             break;
         case "backspace":
             handleBackspace();
@@ -53,6 +68,11 @@ container.addEventListener("click", (e) =>
             console.log("Do Nothing");
     };
     i++;
+}
+
+container.addEventListener("click", (e) =>
+{
+    operate(e.target);
 });
 
 function handleBackspace()
@@ -78,7 +98,7 @@ function handleBackspace()
 
 
 }
-function handleNumber()
+function handleNumber(userInput)
 {
     if(!isOperatorIncluded(string) && isComputed)
         clearInput();
@@ -95,21 +115,21 @@ function handleNumber()
     
 }
 
-function handleOperator(e)
+function handleOperator()
 {
        //console.log(userInput);
        if (isOperatorIncluded(string))
         {
-            string = evaluateExpr(e);
+            string = evaluateExpr();
             display.textContent = string;
         }
         string += " " + userInput + " ";
 }
-function handleEqual(e)
+function handleEqual()
 {
     if (isOperatorIncluded(string))
         {
-            string = evaluateExpr(e);
+            string = evaluateExpr();
             display.textContent = string;
         }
 }
@@ -118,7 +138,7 @@ function isOperatorIncluded(str)
 {   
     return operators.some((item) => str.includes(item))
 }
-function evaluateExpr(e)
+function evaluateExpr()
 {
     calc = new Calculator();
     result = calc.calculate(string)
